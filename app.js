@@ -17,7 +17,11 @@ function cleanDisplayText(s){
     .replace(/\bficous\b/gi, "fictitious")
     .replace(/\bdefecve\b/gi, "defective")
     .replace(/\bmulple\b/gi, "multiple")
-    .replace(/\blighng\b/gi, "lighting");
+    .replace(/\blighng\b/gi, "lighting")
+    .replace(/\bregistraon\b/gi, "registration")
+    .replace(/\bRegistraon\b/g, "Registration")
+    .replace(/Cer\.cate/gi, "Certificate")
+    .replace(/\bcericate\b/gi, "certificate");
 }
 ,
   statutesBySection: new Map(),
