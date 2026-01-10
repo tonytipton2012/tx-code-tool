@@ -14,17 +14,7 @@ const state = {
 };
 
 function cleanDisplayText(s){
-  if(!s) return s
-    .replace(/\bconvicon\b/gi,"conviction")
-    .replace(/\brestricon\b/gi,"restriction")
-    .replace(/\blicense[- ]?plate\b/gi,"license plate")
-    .replace(/\bfm\b/gi,"from")
-    .replace(/\bigniton\b/gi,"ignition")
-    .replace(/\bocupational\b/gi,"occupational")
-    .replace(/\binstrucional\b/gi,"instructional")
-    .replace(/\bactvate\b/gi,"activate")
-    .replace(/\brecreatonal\b/gi,"recreational")
-    .replace(/\bexeptions\b/gi,"exceptions");;
+  if(!s) return s;
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
