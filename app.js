@@ -20,6 +20,9 @@ function cleanDisplayText(s){
     .replace(/\blighng\b/gi, "lighting")
     .replace(/\bregistraon\b/gi, "registration")
     .replace(/\bRegistraon\b/g, "Registration")
+    .replace(/cer\W*cate/gi, "certificate")
+    .replace(/Cer\W*cate/g, "Certificate")
+    .replace(/\bcericate\b/gi, "certificate")
     .replace(/Cer\.cate/gi, "Certificate")
     .replace(/\bcericate\b/gi, "certificate");
 }
