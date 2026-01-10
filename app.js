@@ -365,3 +365,64 @@ function runSearch(query){
 }
 
 init();
+
+
+function initVoiceSearch(){
+  const btn = document.getElementById("voiceBtn");
+  const q = document.getElementById("q");
+  if(!btn || !q) return;
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    btn.style.display = "none";
+    return;
+  }
+
+  const rec = new SpeechRecognition();
+  rec.lang = "en-US";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  let listening = false;
+
+  function setListening(v){
+    listening = v;
+    btn.setAttribute("aria-pressed", v ? "true" : "false");
+    btn.textContent = v ? "🛑" : "🎤";
+    btn.title = v ? "Stop listening" : "Voice search";
+  }
+
+  btn.addEventListener("click", () => {
+    try{
+      if(listening){
+        rec.stop();
+        return;
+      }
+      setListening(true);
+      rec.start();
+    }catch(e){
+      setListening(false);
+      try{ showError("Voice search failed to start. Try again."); }catch(_){}
+    }
+  });
+
+  rec.onresult = (event) => {
+    const transcript = (event.results && event.results[0] && event.results[0][0] && event.results[0][0].transcript) ? event.results[0][0].transcript : "";
+    if(transcript){
+      q.value = transcript.trim();
+      q.dispatchEvent(new Event("input", {bubbles:true}));
+    }
+  };
+
+  rec.onerror = (event) => {
+    const msg = (event && event.error) ? ("Voice search error: " + event.error) : "Voice search error.";
+    try{ showError(msg + " (If you're on iPhone, voice search may be unavailable in the browser.)"); }catch(_){}
+  };
+
+  rec.onend = () => {
+    setListening(false);
+  };
+}
+
+
+try{ initVoiceSearch(); }catch(e){}
