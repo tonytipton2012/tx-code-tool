@@ -2,6 +2,7 @@
 // Primary match + related (≤10). Offline-ready after first load.
 
 const $ = (id) => document.getElementById(id);
+const BUILD_ID = "v9";
 
 const state = {
   offenses: [],
@@ -254,7 +255,7 @@ function closeDetails(){
 
 async function loadJson(path){
   const res = await fetch(path, {cache:"no-store"});
-  if (!res.ok) throw new Error(`Failed to load ${path}`);
+  if (!res.ok) throw new Error(`Failed to load ${path} (HTTP ${res.status})`);
   return await res.json();
 }
 
@@ -288,8 +289,36 @@ async function init(){
 
   }catch(e){
     console.error(e);
-    showStatus("Error loading data. (If first time offline, connect once to cache.)");
+    const msg = (e && e.message) ? e.message : String(e);
+    showStatusHtml(
+      `⚠️ <b>Error loading data</b> (build ${BUILD_ID}).<br><br>` +
+      `<div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; opacity: .9;">${msg}</div>` +
+      `<br><button id="resetBtn" style="padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card);">Reset app cache</button>` +
+      `<div style="margin-top:8px;opacity:.85;">If you just updated, the phone may still be using an old cached version. Tap reset once.</div>`
+    );
+    const b = document.getElementById('resetBtn');
+    if (b) b.onclick = hardReset;
   }
+}
+
+
+async function hardReset(){
+  try{
+    // Unregister service workers
+    if (navigator.serviceWorker){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+    // Clear caches
+    if (window.caches){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  }catch(e){
+    console.warn(e);
+  }
+  // Hard reload
+  location.reload();
 }
 
 function runSearch(query){

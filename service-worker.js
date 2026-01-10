@@ -1,4 +1,4 @@
-const CACHE_NAME = "tx-code-cache-v14";
+const CACHE_NAME = "tx-code-cache-v15";
 const CORE = [
   "./",
   "./index.html",
