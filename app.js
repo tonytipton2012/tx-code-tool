@@ -6,7 +6,20 @@ const $ = (id) => document.getElementById(id);
 const state = {
   offenses: [],
   byId: new Map(),
-  aliases: {},
+  aliases: {}
+function cleanDisplayText(s){
+  if(!s) return s;
+  // Last-line defense against OCR typos that may sneak into source text.
+  return s
+    .replace(/\bLel\b/gi, "Left")
+    .replace(/\bAer\b/gi, "After")
+    .replace(/O\.?cer/gi, "Officer")
+    .replace(/\bficous\b/gi, "fictitious")
+    .replace(/\bdefecve\b/gi, "defective")
+    .replace(/\bmulple\b/gi, "multiple")
+    .replace(/\blighng\b/gi, "lighting");
+}
+,
   statutesBySection: new Map(),
   statutesRegistryBySection: new Map(),
   relatedOpen: false
@@ -121,7 +134,7 @@ function renderPrimary(o){
     setHidden("primarySec", true);
     return;
   }
-  $("primaryTitle").textContent = o.title;
+  $("primaryTitle").textContent = cleanDisplayText(o.title);
   const code = o.code || "TTC";
   const cite = `${code} § ${o.citation}`;
   $("primaryMeta").textContent = `${cite}${o.level_code ? " • " + o.level_code : ""}`;
@@ -188,7 +201,7 @@ function wireDetailButtons(container){
 
 function openDetails(o){
   const dlg = $("detailDlg");
-  $("dlgTitle").textContent = o.title;
+  $("dlgTitle").textContent = cleanDisplayText(o.title);
   const code = o.code || "TTC";
   const cite = `${code} § ${o.citation}`;
   $("dlgBody").innerHTML = `
