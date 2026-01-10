@@ -374,7 +374,12 @@ function initVoiceSearch(){
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRecognition){
-    btn.style.display = "none";
+    // Always show the mic. If unsupported, give a clear message.
+    btn.setAttribute("aria-disabled", "true");
+    btn.title = "Voice search not supported on this device/browser";
+    btn.addEventListener("click", () => {
+      try{ showError("Voice search not supported on this device/browser. Use typing."); }catch(_){}
+    });
     return;
   }
 
