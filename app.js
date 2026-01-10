@@ -14,7 +14,12 @@ const state = {
 };
 
 function cleanDisplayText(s){
-  if(!s) return s;
+  if(!s) return s
+    .replace(/\bignion\b/gi,"ignition")
+    .replace(/\binstrucon\b/gi,"instruction")
+    .replace(/\bacvate\b/gi,"activate")
+    .replace(/\bexcepons\b/gi,"exceptions")
+    .replace(/\brecreaonal\b/gi,"recreational");
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
