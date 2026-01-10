@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>TX Traffic Code QuickSearch</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0b5fff">
+</head>
+<body>
+  <header>
+    <div class="title">TX Traffic Code QuickSearch</div>
+    <div class="subtitle">Primary match + related (≤10). Offline-ready after first load.</div>
+  </header>
+
+  <main>
+    <div class="searchWrap">
+      <input id="q" type="search" inputmode="search" autocomplete="off" autocapitalize="none"
+             placeholder='Search: insurance, weaving, blinker, stop sign, tag, school zone…' />
+      <button id="clearBtn" title="Clear">×</button>
+    </div>
+
+    <section id="status" class="status">Loading data…</section>
+
+    <section id="primarySec" class="card hidden">
+      <div class="badge">PRIMARY MATCH</div>
+      <div id="primaryTitle" class="cardTitle"></div>
+      <div id="primaryMeta" class="cardMeta"></div>
+      <div class="actions">
+        <button id="copyPrimary">Copy citation</button>
+        <button id="openPrimary">Details</button>
+      </div>
+    </section>
+
+    <section id="relatedWrap" class="hidden">
+      <button id="toggleRelated" class="toggle">Show related (0)</button>
+      <div id="relatedList" class="list hidden"></div>
+    </section>
+
+    <section id="topWrap" class="hidden">
+      <div class="sectionTitle">Top matches</div>
+      <div id="topList" class="list"></div>
+    </section>
+  </main>
+
+  <dialog id="detailDlg">
+    <div class="dlgHeader">
+      <div id="dlgTitle" class="dlgTitle"></div>
+      <button id="closeDlg" class="dlgClose">Close</button>
+    </div>
+    <div id="dlgBody" class="dlgBody"></div>
+  </dialog>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+</body>
+</html>
