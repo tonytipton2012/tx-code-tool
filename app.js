@@ -14,7 +14,17 @@ const state = {
 };
 
 function cleanDisplayText(s){
-  if(!s) return s;
+  if(!s) return s
+    .replace(/\bconvicon\b/gi,"conviction")
+    .replace(/\brestricon\b/gi,"restriction")
+    .replace(/\blicense[- ]?plate\b/gi,"license plate")
+    .replace(/\bfm\b/gi,"from")
+    .replace(/\bigniton\b/gi,"ignition")
+    .replace(/\bocupational\b/gi,"occupational")
+    .replace(/\binstrucional\b/gi,"instructional")
+    .replace(/\bactvate\b/gi,"activate")
+    .replace(/\brecreatonal\b/gi,"recreational")
+    .replace(/\bexeptions\b/gi,"exceptions");;
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
@@ -365,69 +375,3 @@ function runSearch(query){
 }
 
 init();
-
-
-function initVoiceSearch(){
-  const btn = document.getElementById("voiceBtn");
-  const q = document.getElementById("q");
-  if(!btn || !q) return;
-
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SpeechRecognition){
-    // Always show the mic. If unsupported, give a clear message.
-    btn.setAttribute("aria-disabled", "true");
-    btn.title = "Voice search not supported on this device/browser";
-    btn.addEventListener("click", () => {
-      try{ showError("Voice search not supported on this device/browser. Use typing."); }catch(_){}
-    });
-    return;
-  }
-
-  const rec = new SpeechRecognition();
-  rec.lang = "en-US";
-  rec.interimResults = false;
-  rec.maxAlternatives = 1;
-
-  let listening = false;
-
-  function setListening(v){
-    listening = v;
-    btn.setAttribute("aria-pressed", v ? "true" : "false");
-    btn.textContent = v ? "🛑" : "🎤";
-    btn.title = v ? "Stop listening" : "Voice search";
-  }
-
-  btn.addEventListener("click", () => {
-    try{
-      if(listening){
-        rec.stop();
-        return;
-      }
-      setListening(true);
-      rec.start();
-    }catch(e){
-      setListening(false);
-      try{ showError("Voice search failed to start. Try again."); }catch(_){}
-    }
-  });
-
-  rec.onresult = (event) => {
-    const transcript = (event.results && event.results[0] && event.results[0][0] && event.results[0][0].transcript) ? event.results[0][0].transcript : "";
-    if(transcript){
-      q.value = transcript.trim();
-      q.dispatchEvent(new Event("input", {bubbles:true}));
-    }
-  };
-
-  rec.onerror = (event) => {
-    const msg = (event && event.error) ? ("Voice search error: " + event.error) : "Voice search error.";
-    try{ showError(msg + " (If you're on iPhone, voice search may be unavailable in the browser.)"); }catch(_){}
-  };
-
-  rec.onend = () => {
-    setListening(false);
-  };
-}
-
-
-try{ initVoiceSearch(); }catch(e){}
