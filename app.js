@@ -6,7 +6,12 @@ const $ = (id) => document.getElementById(id);
 const state = {
   offenses: [],
   byId: new Map(),
-  aliases: {}
+  aliases: {},
+  statutesBySection: new Map(),
+  statutesRegistryBySection: new Map(),
+  relatedOpen: false
+};
+
 function cleanDisplayText(s){
   if(!s) return s;
   // Last-line defense against OCR typos that may sneak into source text.
@@ -26,11 +31,7 @@ function cleanDisplayText(s){
     .replace(/Cer\.cate/gi, "Certificate")
     .replace(/\bcericate\b/gi, "certificate");
 }
-,
-  statutesBySection: new Map(),
-  statutesRegistryBySection: new Map(),
-  relatedOpen: false
-};
+
 
 function normalize(s){
   return (s || "").toString().trim().toLowerCase();
