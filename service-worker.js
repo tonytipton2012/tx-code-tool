@@ -1,4 +1,4 @@
-const CACHE_NAME = "tx-code-cache-v1";
+const CACHE_NAME = "tx-code-cache-v2";
 const CORE = [
   "./",
   "./index.html",
@@ -7,6 +7,8 @@ const CORE = [
   "./manifest.json",
   "./offenses.json",
   "./primary_aliases.json",
+  "./statutes.json",
+  "./statutes_registry.json",
   "./icon-192.png",
   "./icon-512.png"
 ];

@@ -7,6 +7,8 @@ const state = {
   offenses: [],
   byId: new Map(),
   aliases: {},
+  statutesBySection: new Map(),
+  statutesRegistryBySection: new Map(),
   relatedOpen: false
 };
 
@@ -137,9 +139,36 @@ function openDetails(o){
     <div class="kv"><b>Citation:</b> ${escapeHtml(cite)}</div>
     <div class="kv"><b>Offense level:</b> ${escapeHtml(o.level_code || "Not specified in dataset")}</div>
     <div class="kv"><b>Search keywords:</b> ${escapeHtml((o.kw || "").split(/\s+/).slice(0,35).join(" "))}${(o.kw||"").split(/\s+/).length>35 ? " …" : ""}</div>
-    <div class="kv" style="margin-top:10px;"><b>Note:</b> Verbatim statute text is a separate layer we can add next (cached for offline).</div>
+    <div class="kv" style="margin-top:10px;"><b>Full statute:</b> <button id="showStatuteBtn" style="margin-left:8px;">Show full statute</button></div>
+    <div id="statuteBox" class="kv" style="margin-top:10px;"></div>
+    <div class="kv" style="margin-top:10px;"><b>Source:</b> Texas Legislature Online (official). If not cached, it will open online.</div>
   `;
   dlg.showModal();
+
+  // Wire statute button each time dialog opens
+  const btn = document.getElementById("showStatuteBtn");
+  const box = document.getElementById("statuteBox");
+  if (btn && box){
+    box.textContent = "";
+    btn.onclick = () => {
+      // Prefer citation_base (e.g., 545.060). Fall back to parsing citation.
+      const raw = (o.citation_base || o.citation || "").toString();
+      const m = raw.match(/(\d{3}\.\d+)/);
+      const sec = m ? m[1] : "";
+      if (!sec){
+        box.innerHTML = "<b>Statute:</b> Not available for this citation in current dataset.";
+        return;
+      }
+      const cached = state.statutesBySection.get(sec);
+      if (cached && cached.text){
+        box.innerHTML = `<b>TTC § ${sec}</b><div style="white-space:pre-wrap;margin-top:6px;color:var(--text);">${escapeHtml(cached.text)}</div>`;
+        return;
+      }
+      const reg = state.statutesRegistryBySection.get(sec);
+      const url = (reg && reg.url) ? reg.url : `https://statutes.capitol.texas.gov/Docs/TN/htm/TN.${sec.split('.')[0]}.htm#${sec}`;
+      box.innerHTML = `Not cached yet for offline. <a href="${url}" target="_blank" rel="noopener noreferrer">Open official statute online</a>.`;
+    };
+  }
 }
 
 function closeDetails(){
@@ -154,9 +183,11 @@ async function loadJson(path){
 
 async function init(){
   try{
-    const [offenses, aliases] = await Promise.all([
+    const [offenses, aliases, statutes, statutesRegistry] = await Promise.all([
       loadJson("offenses.json"),
-      loadJson("primary_aliases.json")
+      loadJson("primary_aliases.json"),
+      loadJson("statutes.json"),
+      loadJson("statutes_registry.json")
     ]);
 
     state.offenses = offenses;
