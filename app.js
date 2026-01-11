@@ -32,6 +32,7 @@ const state = {
 };
 
 function cleanDisplayText(s){
+  s = s.replace(/\bLe\b/gi,'Left');
   if(!s) return s
     .replace(/\bignion\b/gi,"ignition")
     .replace(/\binstrucon\b/gi,"instruction")
