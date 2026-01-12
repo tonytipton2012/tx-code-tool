@@ -1,6 +1,6 @@
 
-const APP_VERSION = "v1.0.99-debug";
-const BUILD_TIME = "2026-01-11 21:30:00";
+const APP_VERSION = "v1.0.100-debug";
+const BUILD_TIME = "2026-01-11 22:00:00";
 
 function setVersionBadges(offenseCount){
   const vb = document.getElementById("verBadge");
@@ -110,8 +110,12 @@ function escapeHtml(str){
   }[m]));
 }
 
-function showStatus(msg){
-  $("status").textContent = msg;
+\1
+
+function showStatusHtml(html){
+  const el = document.getElementById("status");
+  if (!el) return;
+  el.innerHTML = String(html);
 }
 
 function setHidden(id, hidden){
