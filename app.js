@@ -1,6 +1,6 @@
 
-const APP_VERSION = "v1.0.16";
-const BUILD_TIME = "2026-01-10 21:13:03";
+const APP_VERSION = "v1.0.17";
+const BUILD_TIME = "2026-01-11 20:00:00";
 
 function setVersionBadges(offenseCount){
   const vb = document.getElementById("verBadge");
@@ -309,6 +309,9 @@ async function init(){
     state.aliases = aliases;
     state.byId = new Map(offenses.map(o => [o.id, o]));
 
+    setVersionBadges(offenses.length);
+
+
     showStatus("");
 
     // wire UI
@@ -383,6 +386,14 @@ function runSearch(query){
     if (s > 0) scored.push([s, o]);
   }
   scored.sort((a,b)=> b[0]-a[0]);
+
+  if (scored.length === 0){
+    renderPrimaries([]);
+    renderRelated([]);
+    renderTop([]);
+    showStatus(`No matches. Records loaded: ${state.offenses.length}`);
+    return;
+  }
 
   // related: cap 10, exclude primary if present
   const related = [];
