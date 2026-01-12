@@ -1,6 +1,6 @@
 
-const APP_VERSION = "v1.0.17";
-const BUILD_TIME = "2026-01-11 20:00:00";
+const APP_VERSION = "v1.0.16";
+const BUILD_TIME = "2026-01-10 21:13:03";
 
 function setVersionBadges(offenseCount){
   const vb = document.getElementById("verBadge");
@@ -38,15 +38,7 @@ function cleanDisplayText(s){
     .replace(/\binstrucon\b/gi,"instruction")
     .replace(/\bacvate\b/gi,"activate")
     .replace(/\bexcepons\b/gi,"exceptions")
-    .replace(/\brecreaonal\b/gi,"recreational")
-    .replace(/\bArcles\b/gi,"Articles")
-    .replace(/\bNighme\b/gi,"Nighttime")
-    .replace(/\bDecepvely\b/gi,"Deceptively")
-    .replace(/\bConstrucon\b/gi,"Construction")
-    .replace(/\bAended\b/gi,"Offended")
-    .replace(/\bSpling\b/gi,"Splitting")
-    .replace(/\bRestricons\b/gi,"Restrictions")
-;
+    .replace(/\brecreaonal\b/gi,"recreational");
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
@@ -67,7 +59,7 @@ function cleanDisplayText(s){
 
 
 function normalize(s){
-  return (s || "").toString().trim().toLowerCasee();
+  return (s || "").toString().trim().toLowerCase();
 }
 
 function tokens(s){
@@ -397,12 +389,3 @@ function runSearch(query){
 }
 
 init();
-
-
-// --- Debug/boot marker (safe) ---
-window.__TX_TOOL_JS_LOADED = true;
-document.addEventListener("DOMContentLoaded", () => {
-  const el = document.getElementById("jsLoadedBadge");
-  if (el) el.textContent = "JS: loaded";
-});
-
