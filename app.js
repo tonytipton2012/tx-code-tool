@@ -72,7 +72,7 @@ function cleanDisplayText(s){
 
 
 function normalize(s){
-  return (s || "").toString().trim().toLowerCasee();
+  return (s || "").toString().trim().toLowerCase();
 }
 
 function tokens(s){
