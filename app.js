@@ -1,6 +1,6 @@
 
-const APP_VERSION = "v1.0.100-debug";
-const BUILD_TIME = "2026-01-11 22:00:00";
+const APP_VERSION = "v1.0.16";
+const BUILD_TIME = "2026-01-10 21:13:03";
 
 function setVersionBadges(offenseCount){
   const vb = document.getElementById("verBadge");
@@ -38,8 +38,7 @@ function cleanDisplayText(s){
     .replace(/\binstrucon\b/gi,"instruction")
     .replace(/\bacvate\b/gi,"activate")
     .replace(/\bexcepons\b/gi,"exceptions")
-    .replace(/\brecreaonal\b/gi,"recreational")
-    .replace(/Arcles/gi,"Articles");
+    .replace(/\brecreaonal\b/gi,"recreational");
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
@@ -60,7 +59,7 @@ function cleanDisplayText(s){
 
 
 function normalize(s){
-  return (s || "").toString().trim().toLowerCasee();
+  return (s || "").toString().trim().toLowerCase();
 }
 
 function tokens(s){
@@ -110,12 +109,8 @@ function escapeHtml(str){
   }[m]));
 }
 
-\1
-
-function showStatusHtml(html){
-  const el = document.getElementById("status");
-  if (!el) return;
-  el.innerHTML = String(html);
+function showStatus(msg){
+  $("status").textContent = msg;
 }
 
 function setHidden(id, hidden){
@@ -394,17 +389,3 @@ function runSearch(query){
 }
 
 init();
-
-// --- Debug: surface runtime errors in the status line (for iPhone Safari) ---
-window.addEventListener("error", (e) => {
-  try{
-    const msg = (e && e.message) ? e.message : "Unknown JS error";
-    showStatus("JS ERROR: " + msg);
-  }catch(_){}
-});
-window.addEventListener("unhandledrejection", (e) => {
-  try{
-    const msg = (e && e.reason && e.reason.message) ? e.reason.message : (e && e.reason ? String(e.reason) : "Unhandled rejection");
-    showStatus("LOAD ERROR: " + msg);
-  }catch(_){}
-});
