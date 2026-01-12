@@ -38,7 +38,20 @@ function cleanDisplayText(s){
     .replace(/\binstrucon\b/gi,"instruction")
     .replace(/\bacvate\b/gi,"activate")
     .replace(/\bexcepons\b/gi,"exceptions")
-    .replace(/\brecreaonal\b/gi,"recreational");
+    .replace(/\brecreaonal\b/gi,"recreational")
+    .replace(/\bArcles\b/gi,"Articles")
+    .replace(/\bNighme\b/gi,"Nighttime")
+    .replace(/\bDecepvely\b/gi,"Deceptively")
+    .replace(/\bConstrucon\b/gi,"Construction")
+    .replace(/\bAended\b/gi,"Offended")
+    .replace(/\bSpling\b/gi,"Splitting")
+    .replace(/\bRestricons\b/gi,"Restrictions")
+    .replace(/\bIntersecon\b/gi,"Intersection")
+    .replace(/\binspecon\b/gi,"inspection")
+    .replace(/\bInspecon\b/g,"Inspection")
+    .replace(/\bsecon\b/gi,"section")
+
+;
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
@@ -59,7 +72,7 @@ function cleanDisplayText(s){
 
 
 function normalize(s){
-  return (s || "").toString().trim().toLowerCase();
+  return (s || "").toString().trim().toLowerCasee();
 }
 
 function tokens(s){
