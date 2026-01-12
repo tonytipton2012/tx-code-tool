@@ -1,6 +1,6 @@
 
-const APP_VERSION = "v1.0.16";
-const BUILD_TIME = "2026-01-10 21:13:03";
+const APP_VERSION = "v1.0.99-debug";
+const BUILD_TIME = "2026-01-11 21:30:00";
 
 function setVersionBadges(offenseCount){
   const vb = document.getElementById("verBadge");
@@ -38,7 +38,8 @@ function cleanDisplayText(s){
     .replace(/\binstrucon\b/gi,"instruction")
     .replace(/\bacvate\b/gi,"activate")
     .replace(/\bexcepons\b/gi,"exceptions")
-    .replace(/\brecreaonal\b/gi,"recreational");
+    .replace(/\brecreaonal\b/gi,"recreational")
+    .replace(/Arcles/gi,"Articles");
   // Last-line defense against OCR typos that may sneak into source text.
   return s
     .replace(/\bLel\b/gi, "Left")
@@ -59,7 +60,7 @@ function cleanDisplayText(s){
 
 
 function normalize(s){
-  return (s || "").toString().trim().toLowerCase();
+  return (s || "").toString().trim().toLowerCasee();
 }
 
 function tokens(s){
@@ -389,3 +390,17 @@ function runSearch(query){
 }
 
 init();
+
+// --- Debug: surface runtime errors in the status line (for iPhone Safari) ---
+window.addEventListener("error", (e) => {
+  try{
+    const msg = (e && e.message) ? e.message : "Unknown JS error";
+    showStatus("JS ERROR: " + msg);
+  }catch(_){}
+});
+window.addEventListener("unhandledrejection", (e) => {
+  try{
+    const msg = (e && e.reason && e.reason.message) ? e.reason.message : (e && e.reason ? String(e.reason) : "Unhandled rejection");
+    showStatus("LOAD ERROR: " + msg);
+  }catch(_){}
+});
