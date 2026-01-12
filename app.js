@@ -46,11 +46,6 @@ function cleanDisplayText(s){
     .replace(/\bAended\b/gi,"Offended")
     .replace(/\bSpling\b/gi,"Splitting")
     .replace(/\bRestricons\b/gi,"Restrictions")
-    .replace(/\bIntersecon\b/gi,"Intersection")
-    .replace(/\binspecon\b/gi,"inspection")
-    .replace(/\bInspecon\b/g,"Inspection")
-    .replace(/\bsecon\b/gi,"section")
-
 ;
   // Last-line defense against OCR typos that may sneak into source text.
   return s
@@ -72,7 +67,7 @@ function cleanDisplayText(s){
 
 
 function normalize(s){
-  return (s || "").toString().trim().toLowerCase();
+  return (s || "").toString().trim().toLowerCasee();
 }
 
 function tokens(s){
@@ -108,7 +103,7 @@ function itemHtml(o, onDetails){
   return `
     <div class="item">
       <div class="itemTop">
-        <div class="itemTitle">${escapeHtml(cleanDisplayText(o.title))}</div>
+        <div class="itemTitle">${escapeHtml(o.title)}</div>
         <button data-id="${o.id}" class="detailsBtn">Details</button>
       </div>
       <div class="itemMeta">${escapeHtml(cite)}${level ? " • " + escapeHtml(level) : ""}</div>
@@ -165,7 +160,7 @@ function renderPrimaries(list){
     const cite = `${code} § ${o.citation}`;
     card.innerHTML = `
       <div class='itemTop'>
-        <div class='itemTitle'>${escapeHtml(cleanDisplayText(o.title))}</div>
+        <div class='itemTitle'>${escapeHtml(o.title)}</div>
         <button data-id='${o.id}' class='detailsBtn'>Details</button>
       </div>
       <div class='itemMeta'>${escapeHtml(cite)}${o.level_code ? ' • ' + escapeHtml(o.level_code) : ''}</div>
@@ -253,7 +248,7 @@ function openDetails(o){
   $("dlgBody").innerHTML = `
     <div class="kv"><b>Citation:</b> ${escapeHtml(cite)}</div>
     <div class="kv"><b>Offense level:</b> ${escapeHtml(o.level_code || "Not specified in dataset")}</div>
-    <div class="kv"><b>Search keywords:</b> ${escapeHtml(cleanDisplayText((o.kw || "").split(/\s+/).slice(0,35).join(" ")))}${(o.kw||"").split(/\s+/).length>35 ? " …" : ""}</div>
+    <div class="kv"><b>Search keywords:</b> ${escapeHtml((o.kw || "").split(/\s+/).slice(0,35).join(" "))}${(o.kw||"").split(/\s+/).length>35 ? " …" : ""}</div>
     <div class="kv" style="margin-top:10px;"><b>Full statute:</b> <button id="showStatuteBtn" style="margin-left:8px;">Show full statute</button></div>
     <div id="statuteBox" class="kv" style="margin-top:10px;"></div>
     <div class="kv" style="margin-top:10px;"><b>Source:</b> Texas Legislature Online (official). Online only (requires internet).</div>
@@ -264,7 +259,7 @@ function openDetails(o){
   const btn = document.getElementById("showStatuteBtn");
   const box = document.getElementById("statuteBox");
   if (btn && box){
-    box.textContent = cleanDisplayText("");
+    box.textContent = "";
     btn.onclick = () => {
       // Prefer citation_base (e.g., 545.060). Fall back to parsing citation.
       const raw = (o.citation_base || o.citation || "").toString();
@@ -308,9 +303,6 @@ async function init(){
     state.offenses = offenses;
     state.aliases = aliases;
     state.byId = new Map(offenses.map(o => [o.id, o]));
-
-    setVersionBadges(offenses.length);
-
 
     showStatus("");
 
@@ -387,14 +379,6 @@ function runSearch(query){
   }
   scored.sort((a,b)=> b[0]-a[0]);
 
-  if (scored.length === 0){
-    renderPrimaries([]);
-    renderRelated([]);
-    renderTop([]);
-    showStatus(`No matches. Records loaded: ${state.offenses.length}`);
-    return;
-  }
-
   // related: cap 10, exclude primary if present
   const related = [];
   for (const [s,o] of scored){
@@ -413,3 +397,12 @@ function runSearch(query){
 }
 
 init();
+
+
+// --- Debug/boot marker (safe) ---
+window.__TX_TOOL_JS_LOADED = true;
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.getElementById("jsLoadedBadge");
+  if (el) el.textContent = "JS: loaded";
+});
+
